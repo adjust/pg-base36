@@ -1,31 +1,16 @@
 #include "base36.h"
 PG_MODULE_MAGIC;
 
-#define BASE36_LENGTH      13
-
-static int base36_digits[36] =
-{
-	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-	'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-	'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-	'u', 'v', 'w', 'x', 'y', 'z'
-};
+#define BASE36_LENGTH      6
 
 static base36 base36_powers[BASE36_LENGTH] =
 {
-	1ULL,
-	36ULL,
-	1296ULL,
-	46656ULL,
-	1679616ULL,
-	60466176ULL,
-	2176782336ULL,
-	78364164096ULL,
-	2821109907456ULL,
-	101559956668416ULL,
-	3656158440062976ULL,
-	131621703842267136ULL,
-	4738381338321616896ULL
+	1,
+	36,
+	1296,
+	46656,
+	1679616,
+	60466176
 };
 
 static inline

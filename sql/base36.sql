@@ -23,10 +23,10 @@ CREATE TYPE base36 (
 	OUTPUT         = base36_out,
 	RECEIVE        = base36_recv,
 	SEND           = base36_send,
-	LIKE           = bigint,
+	LIKE           = int,
 	CATEGORY       = 'N'
 );
-COMMENT ON TYPE base36 IS 'bigint written in base36: [0-9A-Z]+';
+COMMENT ON TYPE base36 IS 'int written in base36: [0-9a-z]+';
 
 CREATE FUNCTION base36(text)
 RETURNS base36
@@ -41,32 +41,32 @@ LANGUAGE C IMMUTABLE STRICT;
 CREATE CAST (text as base36) WITH FUNCTION base36(text) AS IMPLICIT;
 CREATE CAST (base36 as text) WITH FUNCTION text(base36);
 
-CREATE CAST (bigint as base36) WITHOUT FUNCTION AS IMPLICIT;
-CREATE CAST (base36 as bigint) WITHOUT FUNCTION AS IMPLICIT;
+CREATE CAST (int as base36) WITHOUT FUNCTION AS IMPLICIT;
+CREATE CAST (base36 as int) WITHOUT FUNCTION AS IMPLICIT;
 
-CREATE FUNCTION base36_eq(base36, base36) 
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8eq';
+CREATE FUNCTION base36_eq(base36, base36)
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4eq';
 
-CREATE FUNCTION base36_ne(base36, base36) 
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8ne';
+CREATE FUNCTION base36_ne(base36, base36)
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4ne';
 
-CREATE FUNCTION base36_lt(base36, base36) 
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8lt';
+CREATE FUNCTION base36_lt(base36, base36)
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4lt';
 
-CREATE FUNCTION base36_le(base36, base36) 
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8le';
+CREATE FUNCTION base36_le(base36, base36)
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4le';
 
-CREATE FUNCTION base36_gt(base36, base36) 
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8gt';
+CREATE FUNCTION base36_gt(base36, base36)
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4gt';
 
-CREATE FUNCTION base36_ge(base36, base36) 
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int8ge';
+CREATE FUNCTION base36_ge(base36, base36)
+RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4ge';
 
-CREATE FUNCTION base36_cmp(base36, base36) 
-RETURNS integer LANGUAGE internal IMMUTABLE AS 'btint8cmp';
+CREATE FUNCTION base36_cmp(base36, base36)
+RETURNS integer LANGUAGE internal IMMUTABLE AS 'btint4cmp';
 
-CREATE FUNCTION hash_base36(base36) 
-RETURNS integer LANGUAGE internal IMMUTABLE AS 'hashint8';
+CREATE FUNCTION hash_base36(base36)
+RETURNS integer LANGUAGE internal IMMUTABLE AS 'hashint4';
 
 CREATE OPERATOR = (
 	LEFTARG = base36,
@@ -94,9 +94,9 @@ CREATE OPERATOR < (
 	LEFTARG = base36,
 	RIGHTARG = base36,
 	PROCEDURE = base36_lt,
-	COMMUTATOR = > , 
+	COMMUTATOR = > ,
 	NEGATOR = >= ,
-   	RESTRICT = scalarltsel, 
+   	RESTRICT = scalarltsel,
 	JOIN = scalarltjoinsel
 );
 COMMENT ON OPERATOR <(base36, base36) IS 'less-than';
@@ -105,9 +105,9 @@ CREATE OPERATOR <= (
 	LEFTARG = base36,
 	RIGHTARG = base36,
 	PROCEDURE = base36_le,
-	COMMUTATOR = >= , 
+	COMMUTATOR = >= ,
 	NEGATOR = > ,
-   	RESTRICT = scalarltsel, 
+   	RESTRICT = scalarltsel,
 	JOIN = scalarltjoinsel
 );
 COMMENT ON OPERATOR <=(base36, base36) IS 'less-than-or-equal';
@@ -116,9 +116,9 @@ CREATE OPERATOR > (
 	LEFTARG = base36,
 	RIGHTARG = base36,
 	PROCEDURE = base36_gt,
-	COMMUTATOR = < , 
+	COMMUTATOR = < ,
 	NEGATOR = <= ,
-   	RESTRICT = scalargtsel, 
+   	RESTRICT = scalargtsel,
 	JOIN = scalargtjoinsel
 );
 COMMENT ON OPERATOR >(base36, base36) IS 'greater-than';
@@ -127,9 +127,9 @@ CREATE OPERATOR >= (
 	LEFTARG = base36,
 	RIGHTARG = base36,
 	PROCEDURE = base36_ge,
-	COMMUTATOR = <= , 
+	COMMUTATOR = <= ,
 	NEGATOR = < ,
-   	RESTRICT = scalargtsel, 
+   	RESTRICT = scalargtsel,
 	JOIN = scalargtjoinsel
 );
 COMMENT ON OPERATOR >=(base36, base36) IS 'greater-than-or-equal';
