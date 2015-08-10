@@ -33,5 +33,13 @@ Datum bigbase36_cast_to_text(PG_FUNCTION_ARGS);
 Datum bigbase36_cast_from_text(PG_FUNCTION_ARGS);
 Datum bigbase36_cast_to_bigint(PG_FUNCTION_ARGS);
 Datum bigbase36_cast_from_bigint(PG_FUNCTION_ARGS);
+#define OUTOFRANGE_ERROR(_str, _typ)                            \
+  do {                                                          \
+    ereport(ERROR,                                              \
+      (errcode(ERRCODE_NUMERIC_VALUE_OUT_OF_RANGE),             \
+        errmsg("value \"%s\" is out of range for type %s",      \
+          _str, _typ)));                                        \
+  } while(0)                                                    \
+
 
 #endif // BASE36_H

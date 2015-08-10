@@ -23,18 +23,27 @@ static bigbase36 bigbase36_powers[BIGBASE36_LENGTH] =
 static inline
 bigbase36 bigbase36_from_str(const char *str)
 {
-	int i, d = 0, n = strlen(str);
+	int i = 0, d = 0, n = strlen(str);
 	bigbase36 c = 0;
+	bool neg_sign = false;
 
-	if( n == 0 || n > BIGBASE36_LENGTH )
+	if (n == 0){
+			OUTOFRANGE_ERROR(str, "bigbase36");
+	}
+	else if(str[0] == '-')
 	{
-		ereport(ERROR,
-			(errcode(ERRCODE_NUMERIC_VALUE_OUT_OF_RANGE),
-				errmsg("value \"%s\" is out of range for type bigbase36",
-					str)));
+	  if (n-1 > BIGBASE36_LENGTH)
+			OUTOFRANGE_ERROR(str, "bigbase36");
+
+		neg_sign = true;
+		i = 1;
+	}
+	else if (n > BIGBASE36_LENGTH)
+	{
+		OUTOFRANGE_ERROR(str, "bigbase36");
 	}
 
-	for(i=0; i<n; i++) {
+	for(; i<n; i++) {
 		if( str[i] >= '0' && str[i] <= '9' )
 			d = str[i] - '0';
 		else if ( str[i] >= 'A' && str[i] <= 'Z' )
@@ -51,14 +60,11 @@ bigbase36 bigbase36_from_str(const char *str)
 		c += d * bigbase36_powers[n-i-1];
 
 		if ( c < 0 )
-		{
-			ereport(ERROR, (
-				errcode(ERRCODE_NUMERIC_VALUE_OUT_OF_RANGE),
-				errmsg("value \"%s\" is out of range for type bigbase36", str)
-				)
-			);
-		}
+			OUTOFRANGE_ERROR(str, "bigbase36");
 	}
+	if (neg_sign)
+		return 0 - c;
+
 	return c;
 }
 
@@ -66,9 +72,11 @@ static inline
 char *bigbase36_to_str(bigbase36 c)
 {
 	int i, d, p = 0;
-	bigbase36 m = c;
+	bigbase36 m = labs(c);
 	bool discard = true;
-	char *str = palloc0((BIGBASE36_LENGTH + 1) * sizeof(char));
+	char *str = palloc0((BIGBASE36_LENGTH + 2) * sizeof(char));
+	if (c < 0 )
+		str[p++] = '-';
 
 	for(i=BIGBASE36_LENGTH-1; i>=0; i--)
 	{

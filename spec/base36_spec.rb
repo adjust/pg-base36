@@ -44,4 +44,14 @@ describe 'base36' do
 			query("SELECT 'a'::base36 < 'b'::base36").should match 't'
 		end
 	end
+
+	describe 'negative values' do
+		it 'should convert from base36' do
+			query("SELECT '-zik0zj'::base36::int").should match -2147483647
+		end
+
+		it 'should convert from ints' do
+			query("SELECT '-2147483647'::integer::base36").should match '-zik0zj'
+		end
+	end
 end

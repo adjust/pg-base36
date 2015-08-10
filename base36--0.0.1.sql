@@ -26,7 +26,7 @@ CREATE TYPE base36 (
 	OUTPUT         = base36_out,
 	RECEIVE        = base36_recv,
 	SEND           = base36_send,
-	LIKE           = int,
+	LIKE           = integer,
 	CATEGORY       = 'N'
 );
 COMMENT ON TYPE base36 IS 'int written in base36: [0-9a-z]+';
@@ -44,8 +44,8 @@ LANGUAGE C IMMUTABLE STRICT;
 CREATE CAST (text as base36) WITH FUNCTION base36(text) AS IMPLICIT;
 CREATE CAST (base36 as text) WITH FUNCTION text(base36);
 
-CREATE CAST (int as base36) WITHOUT FUNCTION AS IMPLICIT;
-CREATE CAST (base36 as int) WITHOUT FUNCTION AS IMPLICIT;
+CREATE CAST (integer as base36) WITHOUT FUNCTION AS IMPLICIT;
+CREATE CAST (base36 as integer) WITHOUT FUNCTION AS IMPLICIT;
 
 CREATE FUNCTION base36_eq(base36, base36)
 RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4eq';
