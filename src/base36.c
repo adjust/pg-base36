@@ -102,29 +102,6 @@ base36_out(PG_FUNCTION_ARGS)
 	PG_RETURN_CSTRING(base36_to_str(c));
 }
 
-PG_FUNCTION_INFO_V1(base36_recv);
-Datum
-base36_recv(PG_FUNCTION_ARGS)
-{
-	StringInfo buf = (StringInfo) PG_GETARG_POINTER(0);
-	const char *str = pq_getmsgstring(buf);
-	pq_getmsgend(buf);
-	PG_RETURN_INT32(base36_from_str(str));
-}
-
-PG_FUNCTION_INFO_V1(base36_send);
-Datum
-base36_send(PG_FUNCTION_ARGS)
-{
-	base36 c = PG_GETARG_INT32(0);
-	StringInfoData buf;
-
-	pq_begintypsend(&buf);
-	pq_sendstring(&buf, base36_to_str(c));
-
-	PG_RETURN_BYTEA_P(pq_endtypsend(&buf));
-}
-
 PG_FUNCTION_INFO_V1(base36_cast_from_text);
 Datum
 base36_cast_from_text(PG_FUNCTION_ARGS)

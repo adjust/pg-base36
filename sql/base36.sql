@@ -9,14 +9,10 @@ AS '$libdir/base36'
 LANGUAGE C IMMUTABLE STRICT;
 
 CREATE FUNCTION base36_recv(internal)
-RETURNS base36
-AS '$libdir/base36'
-LANGUAGE C IMMUTABLE STRICT;
+RETURNS base36 LANGUAGE internal IMMUTABLE AS 'int4recv';
 
 CREATE FUNCTION base36_send(base36)
-RETURNS bytea
-AS '$libdir/base36'
-LANGUAGE C IMMUTABLE STRICT;
+RETURNS bytea LANGUAGE internal IMMUTABLE AS 'int4send';
 
 CREATE TYPE base36 (
 	INPUT          = base36_in,

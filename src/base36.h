@@ -18,8 +18,6 @@ static int base36_digits[36] =
 
 Datum base36_in(PG_FUNCTION_ARGS);
 Datum base36_out(PG_FUNCTION_ARGS);
-Datum base36_recv(PG_FUNCTION_ARGS);
-Datum base36_send(PG_FUNCTION_ARGS);
 Datum base36_cast_to_text(PG_FUNCTION_ARGS);
 Datum base36_cast_from_text(PG_FUNCTION_ARGS);
 Datum base36_cast_to_bigint(PG_FUNCTION_ARGS);
@@ -27,8 +25,6 @@ Datum base36_cast_from_bigint(PG_FUNCTION_ARGS);
 
 Datum bigbase36_in(PG_FUNCTION_ARGS);
 Datum bigbase36_out(PG_FUNCTION_ARGS);
-Datum bigbase36_recv(PG_FUNCTION_ARGS);
-Datum bigbase36_send(PG_FUNCTION_ARGS);
 Datum bigbase36_cast_to_text(PG_FUNCTION_ARGS);
 Datum bigbase36_cast_from_text(PG_FUNCTION_ARGS);
 Datum bigbase36_cast_to_bigint(PG_FUNCTION_ARGS);
