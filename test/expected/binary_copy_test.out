@@ -1,0 +1,40 @@
+BEGIN;
+-- base36 binary should copy data binary from country;
+-- ./spec/binary_copy_spec.rb:8;
+CREATE EXTENSION base36;
+CREATE TABLE before (a base36);
+INSERT INTO before VALUES ('aa'), ('-aa'), ('zik0zj'), ('-zik0zj'), ('0');
+CREATE TABLE after (a base36);
+COPY before TO '/tmp/tst' WITH (FORMAT binary);
+COPY after FROM '/tmp/tst' WITH (FORMAT binary);
+SELECT * FROM after;
+    a    
+---------
+ aa
+ -aa
+ zik0zj
+ -zik0zj
+ 0
+(5 rows)
+
+ROLLBACK;
+BEGIN;
+-- bigbase36 binary should copy data binary from country;
+-- ./spec/binary_copy_spec.rb:28;
+CREATE EXTENSION base36;
+CREATE TABLE before (a bigbase36);
+INSERT INTO before VALUES ('aa'), ('-aa'), ('1y2p0ij32e8e7'), ('-1y2p0ij32e8e7'), ('0');
+CREATE TABLE after (a bigbase36);
+COPY before TO '/tmp/tst' WITH (FORMAT binary);
+COPY after FROM '/tmp/tst' WITH (FORMAT binary);
+SELECT * FROM after;
+       a        
+----------------
+ aa
+ -aa
+ 1y2p0ij32e8e7
+ -1y2p0ij32e8e7
+ 0
+(5 rows)
+
+ROLLBACK;

@@ -1,18 +1,22 @@
 CREATE FUNCTION base36_in(cstring)
 RETURNS base36
 AS '$libdir/base36'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE FUNCTION base36_out(base36)
 RETURNS cstring
 AS '$libdir/base36'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE FUNCTION base36_recv(internal)
-RETURNS base36 LANGUAGE internal IMMUTABLE AS 'int4recv';
+RETURNS base36
+AS 'int4recv'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE FUNCTION base36_send(base36)
-RETURNS bytea LANGUAGE internal IMMUTABLE AS 'int4send';
+RETURNS bytea
+AS 'int4send'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE TYPE base36 (
 	INPUT          = base36_in,
@@ -27,12 +31,12 @@ COMMENT ON TYPE base36 IS 'int written in base36: [0-9a-z]+';
 CREATE FUNCTION base36(text)
 RETURNS base36
 AS '$libdir/base36', 'base36_cast_from_text'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE FUNCTION text(base36)
 RETURNS text
 AS '$libdir/base36', 'base36_cast_to_text'
-LANGUAGE C IMMUTABLE STRICT;
+LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE CAST (text as base36) WITH FUNCTION base36(text) AS IMPLICIT;
 CREATE CAST (base36 as text) WITH FUNCTION text(base36);
@@ -41,28 +45,44 @@ CREATE CAST (integer as base36) WITHOUT FUNCTION AS IMPLICIT;
 CREATE CAST (base36 as integer) WITHOUT FUNCTION AS IMPLICIT;
 
 CREATE FUNCTION base36_eq(base36, base36)
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4eq';
+RETURNS boolean
+AS 'int4eq'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE FUNCTION base36_ne(base36, base36)
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4ne';
+RETURNS boolean
+AS 'int4ne'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE FUNCTION base36_lt(base36, base36)
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4lt';
+RETURNS boolean
+AS 'int4lt'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE FUNCTION base36_le(base36, base36)
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4le';
+RETURNS boolean
+AS 'int4le'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE FUNCTION base36_gt(base36, base36)
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4gt';
+RETURNS boolean
+AS 'int4gt'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE FUNCTION base36_ge(base36, base36)
-RETURNS boolean LANGUAGE internal IMMUTABLE AS 'int4ge';
+RETURNS boolean
+AS 'int4ge'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE FUNCTION base36_cmp(base36, base36)
-RETURNS integer LANGUAGE internal IMMUTABLE AS 'btint4cmp';
+RETURNS integer
+AS 'btint4cmp'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE FUNCTION hash_base36(base36)
-RETURNS integer LANGUAGE internal IMMUTABLE AS 'hashint4';
+RETURNS integer
+AS 'hashint4'
+LANGUAGE internal IMMUTABLE PARALLEL SAFE;
 
 CREATE OPERATOR = (
 	LEFTARG = base36,
@@ -92,7 +112,7 @@ CREATE OPERATOR < (
 	PROCEDURE = base36_lt,
 	COMMUTATOR = > ,
 	NEGATOR = >= ,
-   	RESTRICT = scalarltsel,
+	RESTRICT = scalarltsel,
 	JOIN = scalarltjoinsel
 );
 COMMENT ON OPERATOR <(base36, base36) IS 'less-than';
@@ -103,7 +123,7 @@ CREATE OPERATOR <= (
 	PROCEDURE = base36_le,
 	COMMUTATOR = >= ,
 	NEGATOR = > ,
-   	RESTRICT = scalarltsel,
+	RESTRICT = scalarltsel,
 	JOIN = scalarltjoinsel
 );
 COMMENT ON OPERATOR <=(base36, base36) IS 'less-than-or-equal';
@@ -114,7 +134,7 @@ CREATE OPERATOR > (
 	PROCEDURE = base36_gt,
 	COMMUTATOR = < ,
 	NEGATOR = <= ,
-   	RESTRICT = scalargtsel,
+	RESTRICT = scalargtsel,
 	JOIN = scalargtjoinsel
 );
 COMMENT ON OPERATOR >(base36, base36) IS 'greater-than';
@@ -125,7 +145,7 @@ CREATE OPERATOR >= (
 	PROCEDURE = base36_ge,
 	COMMUTATOR = <= ,
 	NEGATOR = < ,
-   	RESTRICT = scalargtsel,
+	RESTRICT = scalargtsel,
 	JOIN = scalargtjoinsel
 );
 COMMENT ON OPERATOR >=(base36, base36) IS 'greater-than-or-equal';
