@@ -4,6 +4,8 @@
 *.obj
 *.elf
 
+results
+
 # Precompiled Headers
 *.gch
 *.pch
@@ -22,7 +24,6 @@
 
 # Executables
 *.exe
-*.out
 *.app
 *.i*86
 *.x86_64
