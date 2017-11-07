@@ -1,0 +1,93 @@
+BEGIN;
+-- bigbase36 conversion should encode integer;
+-- ./spec/bigbase36_spec.rb:9;
+CREATE EXTENSION base36;
+SELECT 120::bigint::bigbase36;
+ bigbase36 
+-----------
+ 3c
+(1 row)
+
+ROLLBACK;
+BEGIN;
+-- bigbase36 conversion should decode text;
+-- ./spec/bigbase36_spec.rb:13;
+CREATE EXTENSION base36;
+SELECT '3c'::bigbase36::bigint;
+ int8 
+------
+  120
+(1 row)
+
+ROLLBACK;
+BEGIN;
+-- bigbase36 conversion should error to big values;
+-- ./spec/bigbase36_spec.rb:17;
+CREATE EXTENSION base36;
+SELECT '3caaaaaaaaaaaaa'::bigbase36::bigint;
+ERROR:  value "3caaaaaaaaaaaaa" is out of range for type bigbase36
+LINE 1: SELECT '3caaaaaaaaaaaaa'::bigbase36::bigint;
+               ^
+ROLLBACK;
+BEGIN;
+-- bigbase36 conversion should cast big bigbase36 values;
+-- ./spec/bigbase36_spec.rb:21;
+CREATE EXTENSION base36;
+SELECT '1y2p0ij32e8e7'::bigbase36::bigint;
+        int8         
+---------------------
+ 9223372036854775807
+(1 row)
+
+ROLLBACK;
+BEGIN;
+-- bigbase36 conversion should cast big bigint values;
+-- ./spec/bigbase36_spec.rb:25;
+CREATE EXTENSION base36;
+SELECT 9223372036854775807::bigbase36;
+   bigbase36   
+---------------
+ 1y2p0ij32e8e7
+(1 row)
+
+ROLLBACK;
+BEGIN;
+-- bigbase36 conversion should error to big values;
+-- ./spec/bigbase36_spec.rb:29;
+CREATE EXTENSION base36;
+SELECT '1y2p0ij32e8e8'::bigbase36::bigint;
+ERROR:  value "1y2p0ij32e8e8" is out of range for type bigbase36
+LINE 1: SELECT '1y2p0ij32e8e8'::bigbase36::bigint;
+               ^
+ROLLBACK;
+BEGIN;
+-- bigbase36 conversion should error invalid values;
+-- ./spec/bigbase36_spec.rb:33;
+CREATE EXTENSION base36;
+SELECT '3&'::bigbase36::bigint;
+ERROR:  value "&" is not a valid digit for type bigbase36
+LINE 1: SELECT '3&'::bigbase36::bigint;
+               ^
+ROLLBACK;
+BEGIN;
+-- bigbase36 comparison should compare using >;
+-- ./spec/bigbase36_spec.rb:39;
+CREATE EXTENSION base36;
+SELECT 'a'::bigbase36 > 'b'::bigbase36;
+ ?column? 
+----------
+ f
+(1 row)
+
+ROLLBACK;
+BEGIN;
+-- bigbase36 comparison should compare using <;
+-- ./spec/bigbase36_spec.rb:43;
+CREATE EXTENSION base36;
+SELECT 'a'::bigbase36 < 'b'::bigbase36;
+ ?column? 
+----------
+ t
+(1 row)
+
+ROLLBACK;
