@@ -8,6 +8,7 @@
    },
    "provides": { 
       "base36": {
+         "file": "sql/base35.sql",
          "version": "0.0.1",
          "abstract": "Integers represented in base36"
       }
