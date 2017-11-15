@@ -1,5 +1,5 @@
 # base36 extension
-comment = 'my awesome extension'
-default_version = '0.0.1'
+comment = 'Integer Base36 types'
+default_version = '1.0.0'
 relocatable = true
 requires = ''
