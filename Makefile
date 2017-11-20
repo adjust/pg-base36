@@ -10,3 +10,7 @@ REGRESS      = $(patsubst test/sql/%.sql,%,$(TESTS))
 REGRESS_OPTS = --inputdir=test --load-language=plpgsql
 include $(PGXS)
 
+ifeq ($(shell test $(VERSION_NUM) -lt 90600; echo $$?),0)
+REGRESS := $(filter-out parallel_test, $(REGRESS))
+endif
+
