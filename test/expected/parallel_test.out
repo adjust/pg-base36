@@ -18,8 +18,9 @@ SELECT COUNT(*) FROM parallel_test WHERE b1 = '1ftese';
          ->  Partial Aggregate
                Output: PARTIAL count(*)
                ->  Parallel Seq Scan on public.parallel_test
+                     Output: i, b1, b2
                      Filter: (parallel_test.b1 = '1ftese'::base36)
-(9 rows)
+(10 rows)
 
 EXPLAIN (costs off,verbose)
 SELECT COUNT(*) FROM parallel_test WHERE b2 = '1ftese';
@@ -33,8 +34,9 @@ SELECT COUNT(*) FROM parallel_test WHERE b2 = '1ftese';
          ->  Partial Aggregate
                Output: PARTIAL count(*)
                ->  Parallel Seq Scan on public.parallel_test
+                     Output: i, b1, b2
                      Filter: (parallel_test.b2 = '1ftese'::bigbase36)
-(9 rows)
+(10 rows)
 
 EXPLAIN (costs off,verbose)
 SELECT b1, COUNT(*) FROM parallel_test GROUP BY 1;
@@ -43,17 +45,17 @@ SELECT b1, COUNT(*) FROM parallel_test GROUP BY 1;
  Finalize GroupAggregate
    Output: b1, count(*)
    Group Key: parallel_test.b1
-   ->  Sort
+   ->  Gather Merge
          Output: b1, (PARTIAL count(*))
-         Sort Key: parallel_test.b1
-         ->  Gather
+         Workers Planned: 4
+         ->  Sort
                Output: b1, (PARTIAL count(*))
-               Workers Planned: 4
+               Sort Key: parallel_test.b1
                ->  Partial HashAggregate
                      Output: b1, PARTIAL count(*)
                      Group Key: parallel_test.b1
                      ->  Parallel Seq Scan on public.parallel_test
-                           Output: b1
+                           Output: i, b1, b2
 (14 rows)
 
 ROLLBACK;
