@@ -1,0 +1,61 @@
+BEGIN;
+create extension base36;
+SET max_parallel_workers_per_gather=4;
+SET force_parallel_mode=on;
+CREATE TABLE parallel_test(i int, b1 base36, b2 bigbase36) WITH (parallel_workers = 4);
+INSERT INTO parallel_test (i, b1, b2)
+SELECT i, i::int, i::bigint
+FROM generate_series(1,1e6) i;
+EXPLAIN (costs off,verbose)
+SELECT COUNT(*) FROM parallel_test WHERE b1 = '1ftese';
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Finalize Aggregate
+   Output: count(*)
+   ->  Gather
+         Output: (PARTIAL count(*))
+         Workers Planned: 4
+         ->  Partial Aggregate
+               Output: PARTIAL count(*)
+               ->  Parallel Seq Scan on public.parallel_test
+                     Output: i, b1, b2
+                     Filter: (parallel_test.b1 = '1ftese'::base36)
+(10 rows)
+
+EXPLAIN (costs off,verbose)
+SELECT COUNT(*) FROM parallel_test WHERE b2 = '1ftese';
+                              QUERY PLAN                              
+----------------------------------------------------------------------
+ Finalize Aggregate
+   Output: count(*)
+   ->  Gather
+         Output: (PARTIAL count(*))
+         Workers Planned: 4
+         ->  Partial Aggregate
+               Output: PARTIAL count(*)
+               ->  Parallel Seq Scan on public.parallel_test
+                     Output: i, b1, b2
+                     Filter: (parallel_test.b2 = '1ftese'::bigbase36)
+(10 rows)
+
+EXPLAIN (costs off,verbose)
+SELECT b1, COUNT(*) FROM parallel_test GROUP BY 1;
+                            QUERY PLAN                             
+-------------------------------------------------------------------
+ Finalize GroupAggregate
+   Output: b1, count(*)
+   Group Key: parallel_test.b1
+   ->  Gather Merge
+         Output: b1, (PARTIAL count(*))
+         Workers Planned: 4
+         ->  Sort
+               Output: b1, (PARTIAL count(*))
+               Sort Key: parallel_test.b1
+               ->  Partial HashAggregate
+                     Output: b1, PARTIAL count(*)
+                     Group Key: parallel_test.b1
+                     ->  Parallel Seq Scan on public.parallel_test
+                           Output: i, b1, b2
+(14 rows)
+
+ROLLBACK;
