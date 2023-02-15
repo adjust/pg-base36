@@ -1,5 +1,4 @@
 BEGIN;
-create extension base36;
 SET max_parallel_workers_per_gather=4;
 SET force_parallel_mode=on;
 

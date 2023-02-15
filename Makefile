@@ -7,7 +7,8 @@ MODULE_big = base36
 OBJS = $(patsubst %.c,%.o,$(wildcard src/*.c))
 TESTS        = $(wildcard test/sql/*.sql)
 REGRESS      = $(patsubst test/sql/%.sql,%,$(TESTS))
-REGRESS_OPTS = --inputdir=test
+REGRESS_OPTS = --inputdir=test \
+			   --load-extension=$(EXTENSION)
 include $(PGXS)
 
 ifeq ($(shell test $(VERSION_NUM) -lt 90600; echo $$?),0)

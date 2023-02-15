@@ -1,93 +1,71 @@
-BEGIN;
 -- base36 conversion should encode integer;
--- ./spec/base36_spec.rb:9;
-CREATE EXTENSION base36;
 SELECT 120::base36;
  base36 
 --------
  3c
 (1 row)
 
-ROLLBACK;
-BEGIN;
 -- base36 conversion should decode text;
--- ./spec/base36_spec.rb:13;
-CREATE EXTENSION base36;
 SELECT '3c'::base36::int;
  int4 
 ------
   120
 (1 row)
 
-ROLLBACK;
-BEGIN;
 -- base36 conversion should error to big values;
--- ./spec/base36_spec.rb:17;
-CREATE EXTENSION base36;
 SELECT '3caaaaaaaaaaaaa'::base36::bigint;
 ERROR:  value "3caaaaaaaaaaaaa" is out of range for type base36
 LINE 1: SELECT '3caaaaaaaaaaaaa'::base36::bigint;
                ^
-ROLLBACK;
-BEGIN;
 -- base36 conversion should cast big base36 values;
--- ./spec/base36_spec.rb:21;
-CREATE EXTENSION base36;
 SELECT 'zik0zj'::base36::int;
     int4    
 ------------
  2147483647
 (1 row)
 
-ROLLBACK;
-BEGIN;
 -- base36 conversion should cast big int values;
--- ./spec/base36_spec.rb:25;
-CREATE EXTENSION base36;
 SELECT 2147483647::base36;
  base36 
 --------
  zik0zj
 (1 row)
 
-ROLLBACK;
-BEGIN;
 -- base36 conversion should error to big values;
--- ./spec/base36_spec.rb:29;
-CREATE EXTENSION base36;
 SELECT 'zik0zk'::base36::int;
 ERROR:  value "zik0zk" is out of range for type base36
 LINE 1: SELECT 'zik0zk'::base36::int;
                ^
-ROLLBACK;
-BEGIN;
 -- base36 conversion should error invalid values;
--- ./spec/base36_spec.rb:33;
-CREATE EXTENSION base36;
 SELECT '3&'::base36::bigint;
 ERROR:  value "&" is not a valid digit for type base36
 LINE 1: SELECT '3&'::base36::bigint;
                ^
-ROLLBACK;
-BEGIN;
 -- base36 comparison should compare using >;
--- ./spec/base36_spec.rb:39;
-CREATE EXTENSION base36;
 SELECT 'a'::base36 > 'b'::base36;
  ?column? 
 ----------
  f
 (1 row)
 
-ROLLBACK;
-BEGIN;
 -- base36 comparison should compare using <;
--- ./spec/base36_spec.rb:43;
-CREATE EXTENSION base36;
 SELECT 'a'::base36 < 'b'::base36;
  ?column? 
 ----------
  t
 (1 row)
 
-ROLLBACK;
+-- base36 negative values should convert from base36;
+SELECT '-zik0zj'::base36::int;
+    int4     
+-------------
+ -2147483647
+(1 row)
+
+-- base36 negative values should convert from ints;
+SELECT '-2147483647'::integer::base36;
+ base36  
+---------
+ -zik0zj
+(1 row)
+
