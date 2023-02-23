@@ -94,7 +94,8 @@ CREATE OPERATOR = (
 	COMMUTATOR = '=',
 	NEGATOR = '<>',
 	RESTRICT = eqsel,
-	JOIN = eqjoinsel
+	JOIN = eqjoinsel,
+	HASHES, MERGES
 );
 COMMENT ON OPERATOR =(base36, base36) IS 'equals?';
 
