@@ -27,11 +27,11 @@
    },
    "resources": {
        "bugtracker": {
-           "web": "http://github.com/adjust/pg-country/issues"
+           "web": "http://github.com/adjust/pg-base36/issues"
        },
        "repository": {
-          "url": "git://github.com/adjust/pg-country.git",
-          "web": "http://github.com/adjust/pg-country",
+          "url": "git://github.com/adjust/pg-base36.git",
+          "web": "http://github.com/adjust/pg-base36",
           "type": "git"
        }
    }
