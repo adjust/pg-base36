@@ -2,14 +2,16 @@
    "name": "base36",
    "abstract": "Integers represented in base36",
    "version": "1.0.0",
-   "maintainer": [ "Chris Travers <chris.travers@adjust.com>", "Manuel Kniep <rapimo@adjust.com>" ],
+   "maintainer" : [
+      "adjustgmbh"
+   ],
    "license": {
       "PostgreSQL": "http://www.postgresql.org/about/licence"
    },
    "provides": { 
       "base36": {
          "file": "sql/base36.sql",
-         "version": "1.0.0",
+         "version": "1.1.1",
          "abstract": "Integers represented in base36"
       }
    },
@@ -21,7 +23,7 @@
    "prereqs": {
       "runtime": {
         "requires": {
-           "PostgreSQL": "9.3.0"
+           "PostgreSQL": "10.0.0"
         }
       }
    },
