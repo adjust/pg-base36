@@ -1,7 +1,7 @@
 {
    "name": "base36",
    "abstract": "Integers represented in base36",
-   "version": "1.0.0",
+   "version": "1.1.1",
    "maintainer" : [
       "adjustgmbh"
    ],
