@@ -2,6 +2,9 @@
 PG_MODULE_MAGIC;
 
 #define BASE36_LENGTH      6
+#if PG_VERSION_NUM >= 160000
+#include "varatt.h"
+#endif
 
 static base36 base36_powers[BASE36_LENGTH] =
 {
