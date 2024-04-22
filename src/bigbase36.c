@@ -1,7 +1,9 @@
 #include "base36.h"
 
 #define BIGBASE36_LENGTH      13
-
+#if PG_VERSION_NUM >= 160000
+#include "varatt.h"
+#endif
 
 static bigbase36 bigbase36_powers[BIGBASE36_LENGTH] =
 {
